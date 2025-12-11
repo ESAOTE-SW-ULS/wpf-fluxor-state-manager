@@ -24,12 +24,18 @@ public partial class App : Application
                 services.AddFluxor(options =>
                 {
                     options.ScanAssemblies(Assembly.GetExecutingAssembly());
+                    // Also scan the MyLabFluxor assembly if it's in a separate assembly
+                    // options.ScanAssemblies(typeof(UIFramework.Contract.MyLabFluxor.States.MyLabState).Assembly);
                 });
                 
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<Views.CounterView>();
                 services.AddTransient<Views.ImageView>();
                 services.AddTransient<Views.EventsView>();
+                services.AddTransient<Views.MyLabView>();
+                
+                // Register MyLab ViewModels
+                services.AddTransient<Store.MyLab.MyLabViewModel>();
             })
             .Build();
 

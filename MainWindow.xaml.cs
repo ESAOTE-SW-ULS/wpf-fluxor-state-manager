@@ -22,8 +22,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // Load Counter page by default
-        LoadCounterPage();
+        // Load MyLab page by default
+        LoadMyLabPage();
+    }
+
+    private void MyLabButton_Click(object sender, RoutedEventArgs e)
+    {
+        LoadMyLabPage();
     }
 
     private void CounterButton_Click(object sender, RoutedEventArgs e)
@@ -39,6 +44,16 @@ public partial class MainWindow : Window
     private void EventsButton_Click(object sender, RoutedEventArgs e)
     {
         LoadEventsPage();
+    }
+
+    private void LoadMyLabPage()
+    {
+        ContentArea.Children.Clear();
+        var myLabView = App.Services?.GetRequiredService<Views.MyLabView>();
+        if (myLabView != null)
+        {
+            ContentArea.Children.Add(myLabView);
+        }
     }
 
     private void LoadCounterPage()

@@ -52,6 +52,12 @@
                           FontWeight="Bold" 
                           Margin="0,0,0,20"/>
                 
+                <Button x:Name="MyLabButton" 
+                       Content="🏥 MyLab" 
+                       Click="MyLabButton_Click"
+                       Style="{StaticResource SidebarButtonStyle}"
+                       Margin="0,0,0,10"/>
+                
                 <Button x:Name="CounterButton" 
                        Content="🔢 Counter" 
                        Click="CounterButton_Click"
