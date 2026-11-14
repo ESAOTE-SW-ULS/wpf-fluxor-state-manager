@@ -1,8 +1,6 @@
 ﻿using System.Windows;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CommunityToolkitWpfApp.State;
 using CommunityToolkitWpfApp.ViewModels;
 
 namespace CommunityToolkitWpfApp;
@@ -20,13 +18,9 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddSingleton<AppStateStore>();
-                services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
-                services.AddSingleton<IAppDispatcher, AppDispatcher>();
-
+                services.AddSingleton<EventsViewModel>();
                 services.AddSingleton<CounterViewModel>();
                 services.AddSingleton<ImageViewModel>();
-                services.AddSingleton<EventsViewModel>();
                 services.AddSingleton<MainWindowViewModel>();
 
                 services.AddSingleton<MainWindow>();

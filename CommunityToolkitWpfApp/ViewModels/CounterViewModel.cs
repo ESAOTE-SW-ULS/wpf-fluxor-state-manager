@@ -1,50 +1,31 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkitWpfApp.State;
 
 namespace CommunityToolkitWpfApp.ViewModels;
 
-public partial class CounterViewModel : ObservableObject, IDisposable
+public partial class CounterViewModel : ObservableObject
 {
-    private readonly IAppDispatcher _dispatcher;
-    private readonly AppStateStore _store;
+    private readonly EventsViewModel _eventsViewModel;
 
     [ObservableProperty]
     private int counterValue;
 
-    public CounterViewModel(IAppDispatcher dispatcher, AppStateStore store)
+    public CounterViewModel(EventsViewModel eventsViewModel)
     {
-        _dispatcher = dispatcher;
-        _store = store;
-
-        _store.StateChanged += OnStateChanged;
-        Refresh();
+        _eventsViewModel = eventsViewModel;
     }
 
     [RelayCommand]
     private void Increment()
     {
-        _dispatcher.Dispatch(new IncrementCounterAction());
+        CounterValue++;
+        _eventsViewModel.LogEvent("Counter", "Counter incremented", "Value increased by 1");
     }
 
     [RelayCommand]
     private void Decrement()
     {
-        _dispatcher.Dispatch(new DecrementCounterAction());
-    }
-
-    private void OnStateChanged(object? sender, EventArgs e)
-    {
-        Refresh();
-    }
-
-    private void Refresh()
-    {
-        CounterValue = _store.CounterState.Value;
-    }
-
-    public void Dispose()
-    {
-        _store.StateChanged -= OnStateChanged;
+        CounterValue--;
+        _eventsViewModel.LogEvent("Counter", "Counter decremented", "Value decreased by 1");
     }
 }

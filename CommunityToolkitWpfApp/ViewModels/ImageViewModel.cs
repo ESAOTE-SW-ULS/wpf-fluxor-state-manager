@@ -1,98 +1,106 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkitWpfApp.State;
 
 namespace CommunityToolkitWpfApp.ViewModels;
 
-public partial class ImageViewModel : ObservableObject, IDisposable
+public partial class ImageViewModel : ObservableObject
 {
-    private readonly IAppDispatcher _dispatcher;
-    private readonly AppStateStore _store;
+    private readonly EventsViewModel _eventsViewModel;
+
+    private const int MinValue = 0;
+    private const int MaxValue = 100;
 
     [ObservableProperty]
-    private int gain;
+    private int gain = 50;
 
     [ObservableProperty]
-    private int width;
+    private int width = 50;
 
     [ObservableProperty]
-    private int zoom;
+    private int zoom = 50;
 
-    public ImageViewModel(IAppDispatcher dispatcher, AppStateStore store)
+    public ImageViewModel(EventsViewModel eventsViewModel)
     {
-        _dispatcher = dispatcher;
-        _store = store;
-
-        _store.StateChanged += OnStateChanged;
-        Refresh();
+        _eventsViewModel = eventsViewModel;
     }
 
     [RelayCommand(CanExecute = nameof(CanIncrementGain))]
     private void IncrementGain()
     {
-        _dispatcher.Dispatch(new IncrementGainAction());
+        Gain = Math.Min(MaxValue, Gain + 1);
+        _eventsViewModel.LogEvent("Image", "Gain incremented", "Gain value increased by 1");
+        RefreshCommandStates();
     }
 
     [RelayCommand(CanExecute = nameof(CanDecrementGain))]
     private void DecrementGain()
     {
-        _dispatcher.Dispatch(new DecrementGainAction());
+        Gain = Math.Max(MinValue, Gain - 1);
+        _eventsViewModel.LogEvent("Image", "Gain decremented", "Gain value decreased by 1");
+        RefreshCommandStates();
     }
 
     [RelayCommand(CanExecute = nameof(CanIncrementWidth))]
     private void IncrementWidth()
     {
-        _dispatcher.Dispatch(new IncrementWidthAction());
+        Width = Math.Min(MaxValue, Width + 1);
+        _eventsViewModel.LogEvent("Image", "Width incremented", "Width value increased by 1");
+        RefreshCommandStates();
     }
 
     [RelayCommand(CanExecute = nameof(CanDecrementWidth))]
     private void DecrementWidth()
     {
-        _dispatcher.Dispatch(new DecrementWidthAction());
+        Width = Math.Max(MinValue, Width - 1);
+        _eventsViewModel.LogEvent("Image", "Width decremented", "Width value decreased by 1");
+        RefreshCommandStates();
     }
 
     [RelayCommand(CanExecute = nameof(CanIncrementZoom))]
     private void IncrementZoom()
     {
-        _dispatcher.Dispatch(new IncrementZoomAction());
+        Zoom = Math.Min(MaxValue, Zoom + 1);
+        _eventsViewModel.LogEvent("Image", "Zoom incremented", "Zoom value increased by 1");
+        RefreshCommandStates();
     }
 
     [RelayCommand(CanExecute = nameof(CanDecrementZoom))]
     private void DecrementZoom()
     {
-        _dispatcher.Dispatch(new DecrementZoomAction());
+        Zoom = Math.Max(MinValue, Zoom - 1);
+        _eventsViewModel.LogEvent("Image", "Zoom decremented", "Zoom value decreased by 1");
+        RefreshCommandStates();
     }
 
-    private bool CanIncrementGain() => Gain < ImageState.MaxValue;
-    private bool CanDecrementGain() => Gain > ImageState.MinValue;
-    private bool CanIncrementWidth() => Width < ImageState.MaxValue;
-    private bool CanDecrementWidth() => Width > ImageState.MinValue;
-    private bool CanIncrementZoom() => Zoom < ImageState.MaxValue;
-    private bool CanDecrementZoom() => Zoom > ImageState.MinValue;
+    private bool CanIncrementGain() => Gain < MaxValue;
+    private bool CanDecrementGain() => Gain > MinValue;
+    private bool CanIncrementWidth() => Width < MaxValue;
+    private bool CanDecrementWidth() => Width > MinValue;
+    private bool CanIncrementZoom() => Zoom < MaxValue;
+    private bool CanDecrementZoom() => Zoom > MinValue;
 
-    private void OnStateChanged(object? sender, EventArgs e)
+    partial void OnGainChanged(int value)
     {
-        Refresh();
+        RefreshCommandStates();
     }
 
-    private void Refresh()
+    partial void OnWidthChanged(int value)
     {
-        var state = _store.ImageState;
+        RefreshCommandStates();
+    }
 
-        Gain = state.Gain;
-        Width = state.Width;
-        Zoom = state.Zoom;
+    partial void OnZoomChanged(int value)
+    {
+        RefreshCommandStates();
+    }
 
+    private void RefreshCommandStates()
+    {
         IncrementGainCommand.NotifyCanExecuteChanged();
         DecrementGainCommand.NotifyCanExecuteChanged();
         IncrementWidthCommand.NotifyCanExecuteChanged();
         DecrementWidthCommand.NotifyCanExecuteChanged();
         IncrementZoomCommand.NotifyCanExecuteChanged();
         DecrementZoomCommand.NotifyCanExecuteChanged();
-    }
-
-    public void Dispose()
-    {
-        _store.StateChanged -= OnStateChanged;
     }
 }

@@ -20,4 +20,8 @@
     <ApplicationDefinition Remove="CommunityToolkitWpfApp\App.xaml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include=".github\copilot-instructions.md" />
+  </ItemGroup>
+
 </Project>
