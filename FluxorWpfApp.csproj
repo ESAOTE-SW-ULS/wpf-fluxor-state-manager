@@ -14,4 +14,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="CommunityToolkitWpfApp\**\*.cs" />
+    <Page Remove="CommunityToolkitWpfApp\**\*.xaml" />
+    <ApplicationDefinition Remove="CommunityToolkitWpfApp\App.xaml" />
+  </ItemGroup>
+
 </Project>

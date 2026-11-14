@@ -1,0 +1,93 @@
+﻿<Window x:Class="CommunityToolkitWpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CommunityToolkitWpfApp"
+        xmlns:views="clr-namespace:CommunityToolkitWpfApp.Views"
+        xmlns:viewModels="clr-namespace:CommunityToolkitWpfApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Community Toolkit WPF App" Height="600" Width="900">
+    
+    <Window.Resources>
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                               CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#34495E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate DataType="{x:Type viewModels:CounterViewModel}">
+            <views:CounterView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:ImageViewModel}">
+            <views:ImageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModels:EventsViewModel}">
+            <views:EventsView />
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Sidebar Navigation -->
+        <Border Grid.Column="0" Background="#2C3E50" Padding="10">
+            <StackPanel>
+                <TextBlock Text="Navigation" 
+                          Foreground="White" 
+                          FontSize="18" 
+                          FontWeight="Bold" 
+                          Margin="0,0,0,20"/>
+                
+                <Button x:Name="CounterButton" 
+                       Content="🔢 Counter" 
+                       Command="{Binding ShowCounterCommand}"
+                       Style="{StaticResource SidebarButtonStyle}"
+                       Margin="0,0,0,10"/>
+                
+                <Button x:Name="ImageButton" 
+                       Content="🖼️ Image" 
+                       Command="{Binding ShowImageCommand}"
+                       Style="{StaticResource SidebarButtonStyle}"
+                       Margin="0,0,0,10"/>
+                
+                <Button x:Name="EventsButton" 
+                       Content="📊 Events" 
+                       Command="{Binding ShowEventsCommand}"
+                       Style="{StaticResource SidebarButtonStyle}"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Content Area -->
+        <Border Grid.Column="1" Background="#ECF0F1" Padding="20">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Border>
+    </Grid>
+</Window>
