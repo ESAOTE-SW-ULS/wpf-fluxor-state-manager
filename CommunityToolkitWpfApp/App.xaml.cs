@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CommunityToolkitWpfApp.ViewModels;
@@ -18,6 +19,9 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
+                services.AddKeyedSingleton<IMessenger>(MessengerType.Weak, WeakReferenceMessenger.Default);
+                services.AddKeyedSingleton<IMessenger>(MessengerType.Strong, StrongReferenceMessenger.Default);
+
                 services.AddSingleton<EventsViewModel>();
                 services.AddSingleton<CounterViewModel>();
                 services.AddSingleton<ImageViewModel>();

@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommunityToolkitWpfApp.ViewModels;
 
@@ -10,9 +12,12 @@ public partial class CounterViewModel : ObservableObject
     [ObservableProperty]
     private int counterValue;
 
-    public CounterViewModel(EventsViewModel eventsViewModel)
+    public CounterViewModel(EventsViewModel eventsViewModel, [FromKeyedServices(MessengerType.Weak)] IMessenger messenger)
     {
         _eventsViewModel = eventsViewModel;
+
+        var test = App.Services.GetRequiredKeyedService<IMessenger>(MessengerType.Weak);
+        messenger.Send(new EventsViewModel());
     }
 
     [RelayCommand]
