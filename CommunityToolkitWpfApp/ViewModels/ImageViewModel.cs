@@ -1,12 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkitWpfApp.Messages;
+using CommunityToolkitWpfApp.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommunityToolkitWpfApp.ViewModels;
 
-public partial class ImageViewModel : ObservableObject
+public partial class ImageViewModel([FromKeyedServices(MessengerType.Weak)] IMessenger messenger) : ObservableObject
 {
-    private readonly EventsViewModel _eventsViewModel;
-
     private const int MinValue = 0;
     private const int MaxValue = 100;
 
@@ -19,16 +21,17 @@ public partial class ImageViewModel : ObservableObject
     [ObservableProperty]
     private int zoom = 50;
 
-    public ImageViewModel(EventsViewModel eventsViewModel)
-    {
-        _eventsViewModel = eventsViewModel;
-    }
-
     [RelayCommand(CanExecute = nameof(CanIncrementGain))]
     private void IncrementGain()
     {
         Gain = Math.Min(MaxValue, Gain + 1);
-        _eventsViewModel.LogEvent("Image", "Gain incremented", "Gain value increased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Gain incremented",
+            Details = "Gain value increased by 1"
+        }));
         RefreshCommandStates();
     }
 
@@ -36,7 +39,13 @@ public partial class ImageViewModel : ObservableObject
     private void DecrementGain()
     {
         Gain = Math.Max(MinValue, Gain - 1);
-        _eventsViewModel.LogEvent("Image", "Gain decremented", "Gain value decreased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Gain decremented",
+            Details = "Gain value decreased by 1"
+        }));
         RefreshCommandStates();
     }
 
@@ -44,7 +53,13 @@ public partial class ImageViewModel : ObservableObject
     private void IncrementWidth()
     {
         Width = Math.Min(MaxValue, Width + 1);
-        _eventsViewModel.LogEvent("Image", "Width incremented", "Width value increased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Width incremented",
+            Details = "Width value increased by 1"
+        }));
         RefreshCommandStates();
     }
 
@@ -52,7 +67,13 @@ public partial class ImageViewModel : ObservableObject
     private void DecrementWidth()
     {
         Width = Math.Max(MinValue, Width - 1);
-        _eventsViewModel.LogEvent("Image", "Width decremented", "Width value decreased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Width decremented",
+            Details = "Width value decreased by 1"
+        }));
         RefreshCommandStates();
     }
 
@@ -60,7 +81,13 @@ public partial class ImageViewModel : ObservableObject
     private void IncrementZoom()
     {
         Zoom = Math.Min(MaxValue, Zoom + 1);
-        _eventsViewModel.LogEvent("Image", "Zoom incremented", "Zoom value increased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Zoom incremented",
+            Details = "Zoom value increased by 1"
+        }));
         RefreshCommandStates();
     }
 
@@ -68,7 +95,13 @@ public partial class ImageViewModel : ObservableObject
     private void DecrementZoom()
     {
         Zoom = Math.Max(MinValue, Zoom - 1);
-        _eventsViewModel.LogEvent("Image", "Zoom decremented", "Zoom value decreased by 1");
+        messenger.Send(new EventLoggedMessage(new EventLogEntry
+        {
+            Timestamp = DateTime.Now,
+            EventType = "Image",
+            Description = "Zoom decremented",
+            Details = "Zoom value decreased by 1"
+        }));
         RefreshCommandStates();
     }
 
